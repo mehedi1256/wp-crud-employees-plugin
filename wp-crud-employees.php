@@ -23,8 +23,12 @@
  $employeeObject = new MyEmployees();
 
 //  create db table
-register_activation_hook(__FILE__, [$employeeObject, "createEmployeesTable"]);
+register_activation_hook(__FILE__, [$employeeObject, "callPluginActivationFunction"]);
 
 // drop db table
 register_deactivation_hook(__FILE__, [$employeeObject, "dropEmployeesTable"]);
 
+// register shortcode
+add_shortcode("wp-employee-form", [$employeeObject, "createEmployeeForm"]);
+// add assets
+add_action("wp_enqueue_scripts", [$employeeObject, "addAssetsToPlugin"]);
