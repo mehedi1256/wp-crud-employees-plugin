@@ -60,3 +60,7 @@
     background: #007bff;
     color: white;
 }
+
+#form_add_employee label.error {
+    color: red;
+}

@@ -1,6 +1,9 @@
 <div id="wp_employee_crud_plugin">
     <h3 class="section-title">Add Employee</h3>
-    <form action="javascript:void(0);" id="form_add_employee" enctype="multipart/form-data" class="employee-form">
+    <form action="javascript:void(0);" id="form_add_employee" class="employee-form">
+        <input type="hidden" name="action" value="wce_add_employee" />
+        <!-- Add nonce -->
+        <input type="hidden" name="nonce" value="<?php echo wp_create_nonce('wce_add_employee_nonce'); ?>" />
         <div class="form-group">
             <label for="fullname">Full Name:</label>
             <input type="text" name="fullname" placeholder="Employee Name" id="fullname" required />
@@ -39,18 +42,6 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Mehedi Hassan Shovo</td>
-                <td>mehedi@gmail.com</td>
-                <td>SWE</td>
-                <td>---</td>
-                <td>
-                    <button class="btn btn-edit">Edit</button>
-                    <button class="btn btn-delete">Delete</button>
-                </td>
-            </tr>
-        </tbody>
+        <tbody id="tbody_employees_data"></tbody>
     </table>
 </div>

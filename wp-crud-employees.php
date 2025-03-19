@@ -32,3 +32,13 @@ register_deactivation_hook(__FILE__, [$employeeObject, "dropEmployeesTable"]);
 add_shortcode("wp-employee-form", [$employeeObject, "createEmployeeForm"]);
 // add assets
 add_action("wp_enqueue_scripts", [$employeeObject, "addAssetsToPlugin"]);
+
+// process ajax request for add employee
+add_action("wp_ajax_wce_add_employee", [$employeeObject, "handleAddEmployeeFormData"]);
+add_action("wp_ajax_nopriv_wce_add_employee", [$employeeObject, "handleAddEmployeeFormData"]);
+// process ajax request for get employees
+add_action("wp_ajax_wce_load_employees_data", [$employeeObject, "handleLoadEmployeeData"]);
+add_action("wp_ajax_nopriv_wce_load_employees_data", [$employeeObject, "handleLoadEmployeeData"]);
+// process ajax request for DELETE employees
+add_action("wp_ajax_wce_delete_employee", [$employeeObject, "handleDeleteEmployeeData"]);
+add_action("wp_ajax_nopriv_wce_delete_employee", [$employeeObject, "handleDeleteEmployeeData"]);
