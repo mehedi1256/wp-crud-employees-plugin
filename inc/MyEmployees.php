@@ -170,7 +170,8 @@ class MyEmployees
 
     // delete employee data
     public function handleDeleteEmployeeData() {
-        $employee_id = $_GET("empId");
+
+        $employee_id = $_GET["empId"];
 
         $this->wpdb->delete($this->table_name, [
             "id" => $employee_id
