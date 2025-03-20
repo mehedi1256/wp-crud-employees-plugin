@@ -51,9 +51,9 @@ jQuery(document).ready(function () {
     // Render Employees Data
     loadEmployeesData();
     // Delete employee
-    jQuery(document).on("click", ".btn-delete", function() {
+    jQuery(document).on("click", ".btn-delete", function () {
         var employeeId = jQuery(this).data("id");
-        if(confirm("Are you sure want to delete this employee?")) {
+        if (confirm("Are you sure want to delete this employee?")) {
             jQuery.ajax({
                 url: wce_object.ajax_url,
                 data: {
@@ -62,8 +62,8 @@ jQuery(document).ready(function () {
                 },
                 method: "GET",
                 dataType: "json",
-                success: function(response) {
-                    if(response) {
+                success: function (response) {
+                    if (response) {
                         alert(response.message);
                         loadEmployeesData();
                     }
@@ -73,19 +73,19 @@ jQuery(document).ready(function () {
     });
 
     // open add employee form
-    jQuery(document).on("click", "#add-employee", function() {
+    jQuery(document).on("click", "#add-employee", function () {
         jQuery(".add-employee-form").toggleClass("hide-element");
         jQuery(this).addClass("hide-element");
     });
 
     // close add employee form
-    jQuery(document).on("click", "#close-add-emp-form", function() {
+    jQuery(document).on("click", "#close-add-emp-form", function () {
         jQuery(".add-employee-form").toggleClass("hide-element");
         jQuery("#add-employee").removeClass("hide-element");
     });
 
     // open edit employee form
-    jQuery(document).on("click", ".btn-edit", function() {
+    jQuery(document).on("click", ".btn-edit", function () {
         jQuery(".edit-employee-form").removeClass("hide-element");
         jQuery("#add-employee").addClass("hide-element");
         // fetch existing employee data by id
@@ -98,7 +98,7 @@ jQuery(document).ready(function () {
             },
             method: "GET",
             dataType: "json",
-            success: function(response) {
+            success: function (response) {
                 // console.log(response);
                 jQuery("#emp_fullname").val(response?.data?.fullname);
                 jQuery("#emp_email").val(response?.data?.email);
@@ -110,13 +110,13 @@ jQuery(document).ready(function () {
     });
 
     // close edit employee form
-    jQuery(document).on("click", "#close-edit-emp-form", function() {
+    jQuery(document).on("click", "#close-edit-emp-form", function () {
         jQuery(".edit-employee-form").toggleClass("hide-element");
         jQuery("#add-employee").removeClass("hide-element");
     });
 
     // submit edit employee form
-    jQuery(document).on("submit", "#form_edit_employee", function(event) {
+    jQuery(document).on("submit", "#form_edit_employee", function (event) {
         event.preventDefault();
         var formdata = new FormData(this);
         jQuery.ajax({
@@ -126,8 +126,8 @@ jQuery(document).ready(function () {
             contentType: false,
             processData: false,
             dataType: "json",
-            success: function(response) {
-                if(response) {
+            success: function (response) {
+                if (response) {
                     alert(response?.data?.message);
                     loadEmployeesData();
                 }
@@ -151,7 +151,7 @@ function loadEmployeesData() {
             var employeesDataHTML = "";
             jQuery.each(response.employees, function (index, employee) {
                 var emp_profile_image = "--";
-                if(employee.profile_image) {
+                if (employee.profile_image) {
                     emp_profile_image = `<img src="${employee.profile_image}" height="80px" weight="80px"/>`;
                 }
                 employeesDataHTML += `
