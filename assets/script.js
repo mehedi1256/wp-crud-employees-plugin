@@ -71,6 +71,69 @@ jQuery(document).ready(function () {
             });
         }
     });
+
+    // open add employee form
+    jQuery(document).on("click", "#add-employee", function() {
+        jQuery(".add-employee-form").toggleClass("hide-element");
+        jQuery(this).addClass("hide-element");
+    });
+
+    // close add employee form
+    jQuery(document).on("click", "#close-add-emp-form", function() {
+        jQuery(".add-employee-form").toggleClass("hide-element");
+        jQuery("#add-employee").removeClass("hide-element");
+    });
+
+    // open edit employee form
+    jQuery(document).on("click", ".btn-edit", function() {
+        jQuery(".edit-employee-form").removeClass("hide-element");
+        jQuery("#add-employee").addClass("hide-element");
+        // fetch existing employee data by id
+        var employeeId = jQuery(this).data("id"); // jQuery(this).attr("data-id");
+        jQuery.ajax({
+            url: wce_object.ajax_url,
+            data: {
+                action: "wce_get_employee_data",
+                empId: employeeId
+            },
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                // console.log(response);
+                jQuery("#emp_fullname").val(response?.data?.fullname);
+                jQuery("#emp_email").val(response?.data?.email);
+                jQuery("#emp_designation").val(response?.data?.designation);
+                jQuery("#emp_id").val(response?.data?.id);
+            }
+        });
+
+    });
+
+    // close edit employee form
+    jQuery(document).on("click", "#close-edit-emp-form", function() {
+        jQuery(".edit-employee-form").toggleClass("hide-element");
+        jQuery("#add-employee").removeClass("hide-element");
+    });
+
+    // submit edit employee form
+    jQuery(document).on("submit", "#form_edit_employee", function(event) {
+        event.preventDefault();
+        var formdata = new FormData(this);
+        jQuery.ajax({
+            url: wce_object.ajax_url,
+            data: formdata,
+            method: "POST",
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function(response) {
+                if(response) {
+                    alert(response?.data?.message);
+                    loadEmployeesData();
+                }
+            }
+        });
+    });
 });
 
 // Load all employees from employee table
@@ -84,7 +147,7 @@ function loadEmployeesData() {
         method: "GET",
         dataType: "json",
         success: function (response) {
-            console.log(response);
+            // console.log(response);
             var employeesDataHTML = "";
             jQuery.each(response.employees, function (index, employee) {
                 var emp_profile_image = "--";

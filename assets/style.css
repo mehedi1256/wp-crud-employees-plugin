@@ -1,32 +1,55 @@
+/* Container for the entire plugin */
 #wp_employee_crud_plugin {
     max-width: 800px;
-    margin: auto;
+    margin: 40px auto; /* Add more margin for spacing */
+    padding: 0; /* Remove padding from the container, let cards handle it */
+}
+
+/* Card styling for each section */
+.card {
     background: #ffffff;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Space between cards */
     border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
 }
+
+/* Hover effect for cards */
+.card:hover {
+    transform: translateY(-5px); /* Slight lift on hover */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Section title styling */
 .section-title {
     text-align: center;
     font-size: 24px;
     color: #333;
     margin-bottom: 20px;
 }
+
+/* Form group styling */
 .employee-form .form-group {
     margin-bottom: 15px;
 }
+
 .form-group label {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
 }
-.form-group input, .form-group select {
+
+.form-group input,
+.form-group select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
 }
+
+/* Button styling */
 .btn {
     padding: 10px 15px;
     border: none;
@@ -34,33 +57,67 @@
     cursor: pointer;
     font-size: 16px;
 }
+
 .btn-primary {
     background-color: #28a745;
     color: white;
 }
+
 .btn-edit {
     background-color: #ffc107;
     color: #333;
 }
+
 .btn-delete {
     background-color: #dc3545;
     color: white;
 }
+
+/* Table styling */
 .employee-table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
-.employee-table th, .employee-table td {
+
+.employee-table th,
+.employee-table td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: center;
 }
+
 .employee-table th {
     background: #007bff;
     color: white;
 }
 
-#form_add_employee label.error {
+/* Error message styling for form validation */
+#form_add_employee label.error,
+#form_edit_employee label.error {
     color: red;
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    #wp_employee_crud_plugin {
+        margin: 20px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .employee-table th,
+    .employee-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+.hide-element {
+    display: none;
 }

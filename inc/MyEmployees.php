@@ -169,7 +169,8 @@ class MyEmployees
     }
 
     // delete employee data
-    public function handleDeleteEmployeeData() {
+    public function handleDeleteEmployeeData()
+    {
 
         $employee_id = $_GET["empId"];
 
@@ -183,5 +184,129 @@ class MyEmployees
         ]);
 
         wp_die();
+    }
+
+    // get single employee data by id
+    public function handleToGetSingleEmployeeData()
+    {
+        $employee_id = $_GET["empId"];
+
+        if ($employee_id > 0) {
+            $employee_data = $this->wpdb->get_row(
+                "SELECT * FROM {$this->table_name} WHERE id = {$employee_id}",
+                ARRAY_A
+            );
+
+            return wp_send_json([
+                "status" => true,
+                "message" => "Employee Data foudn",
+                "data" => $employee_data
+            ]);
+        } else {
+            return wp_send_json([
+                "status" => false,
+                "message" => "Please pass employee id"
+            ]);
+        }
+    }
+
+
+    // update employee data
+    public function handleUpdateEmployeeData()
+    {
+        // 1. Verify nonce for security
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'wce_edit_employee_nonce')) {
+            wp_send_json_error([
+                'message' => 'Security check failed'
+            ]);
+        }
+
+        // 2. Check user permissions (optional, adjust capability as needed)
+        // if (!current_user_can('edit_posts')) {
+        //     wp_send_json_error([
+        //         'message' => 'Permission denied'
+        //     ]);
+        // }
+
+        // 3. Validate and sanitize input data
+        if (!isset($_POST['emp_id']) || !is_numeric($_POST['emp_id'])) {
+            wp_send_json_error([
+                'message' => 'Invalid employee ID'
+            ]);
+        }
+
+        $employee_id = intval($_POST['emp_id']);
+        $fullname = isset($_POST['emp_fullname']) ? sanitize_text_field($_POST['emp_fullname']) : '';
+        $email = isset($_POST['emp_email']) ? sanitize_email($_POST['emp_email']) : '';
+        $designation = isset($_POST['emp_designation']) ? sanitize_text_field($_POST['emp_designation']) : '';
+
+        // Validate required fields
+        if (empty($fullname) || empty($email) || empty($designation)) {
+            wp_send_json_error([
+                'message' => 'All fields (Full Name, Email, Designation) are required'
+            ]);
+        }
+
+        // Validate email format
+        if (!is_email($email)) {
+            wp_send_json_error([
+                'message' => 'Invalid email address'
+            ]);
+        }
+
+        // 4. Handle file upload (if a new profile image is provided)
+        $file_path = '';
+        if (!empty($_FILES['emp_file']['name'])) {
+            $upload = wp_upload_bits($_FILES['emp_file']['name'], null, file_get_contents($_FILES['emp_file']['tmp_name']));
+            if ($upload['error']) {
+                wp_send_json_error([
+                    'message' => 'File upload failed: ' . $upload['error']
+                ]);
+            }
+            $file_path = $upload['url'];
+        }
+
+        // 5. Prepare data for update
+        $data = [
+            'fullname' => $fullname, // Match the database column name (was "name")
+            'email' => $email,
+            'designation' => $designation
+        ];
+
+        // Include profile image in the update if a new file was uploaded
+        if (!empty($file_path)) {
+            $data['profile_image'] = $file_path;
+        }
+
+        $where = [
+            'id' => $employee_id
+        ];
+
+        // 6. Perform the update
+        $updated = $this->wpdb->update(
+            $this->table_name,
+            $data,
+            $where,
+            ['%s', '%s', '%s', '%s'], // Format for data (all strings)
+            ['%d'] // Format for where (integer)
+        );
+
+        // 7. Check if the update was successful
+        if ($updated === false) {
+            // Log the error for debugging
+            error_log('WPDB Update Error: ' . $this->wpdb->last_error);
+            wp_send_json_error([
+                'message' => 'Failed to update employee data due to a database error'
+            ]);
+        } elseif ($updated === 0) {
+            wp_send_json_error([
+                'message' => 'No employee found with the given ID or no changes were made'
+            ]);
+        }
+
+        // 8. Success response
+        wp_send_json_success([
+            'message' => 'Employee data updated successfully'
+        ]);
     }
 }

@@ -42,3 +42,11 @@ add_action("wp_ajax_nopriv_wce_load_employees_data", [$employeeObject, "handleLo
 // process ajax request for DELETE employees
 add_action("wp_ajax_wce_delete_employee", [$employeeObject, "handleDeleteEmployeeData"]);
 add_action("wp_ajax_nopriv_wce_delete_employee", [$employeeObject, "handleDeleteEmployeeData"]);
+
+//process ajax request for get employee by id
+add_action("wp_ajax_wce_get_employee_data", [$employeeObject, "handleToGetSingleEmployeeData"]);
+add_action("wp_ajax_nopriv_wce_get_employee_data", [$employeeObject, "handleToGetSingleEmployeeData"]);
+
+// process ajax request for update employee
+add_action("wp_ajax_wce_edit_employee", [$employeeObject, "handleUpdateEmployeeData"]);
+add_action("wp_ajax_nopriv_wce_edit_employee", [$employeeObject, "handleUpdateEmployeeData"]);
