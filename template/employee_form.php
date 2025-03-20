@@ -63,6 +63,8 @@
             <div class="form-group">
                 <label for="emp_file">Profile Image:</label>
                 <input type="file" name="emp_file" id="emp_file" />
+                <br/>
+                <img id="emp_profile_image" style="width: 100px;height: 100px;" />
             </div>
             <div class="form-group">
                 <button id="btn_edit_data" type="submit" class="btn btn-primary">Update Employee Data</button>

@@ -104,6 +104,7 @@ jQuery(document).ready(function () {
                 jQuery("#emp_email").val(response?.data?.email);
                 jQuery("#emp_designation").val(response?.data?.designation);
                 jQuery("#emp_id").val(response?.data?.id);
+                jQuery("#emp_profile_image").attr("src", response?.data?.profile_image);
             }
         });
 

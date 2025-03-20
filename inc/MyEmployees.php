@@ -254,6 +254,32 @@ class MyEmployees
             ]);
         }
 
+        // Fetch the current employee data to get the existing profile image
+        $employee = $this->fetchExistingEmployeeData($employee_id);
+
+        if (!$employee) {
+            wp_send_json_error([
+                'message' => 'Employee not found'
+            ]);
+        }
+
+        $old_file_url = !empty($employee['profile_image']) ? $employee['profile_image'] : '';
+        $old_file_path = '';
+
+        // Convert the file URL to a server path if there’s an existing file
+        if ($old_file_url) {
+            // Get the uploads directory
+            $upload_dir = wp_upload_dir();
+            $base_url = $upload_dir['baseurl'];
+            $base_dir = $upload_dir['basedir'];
+
+            // Convert the URL to a file path
+            $old_file_path = str_replace($base_url, $base_dir, $old_file_url);
+
+            // Ensure the path uses the correct directory separator for the server
+            $old_file_path = wp_normalize_path($old_file_path);
+        }
+
         // 4. Handle file upload (if a new profile image is provided)
         $file_path = '';
         if (!empty($_FILES['emp_file']['name'])) {
@@ -264,6 +290,17 @@ class MyEmployees
                 ]);
             }
             $file_path = $upload['url'];
+
+            // Delete the old file if it exists
+            if ($old_file_path && file_exists($old_file_path)) {
+                // if (!unlink($old_file_path)) {
+                //     error_log('Failed to delete old profile image: ' . $old_file_path);
+                //     // Optionally, you can decide whether to fail the request here
+                //     // For now, we'll log the error and continue
+                // }
+                // wp_die($old_file_path);
+                unlink($old_file_path);
+            }
         }
 
         // 5. Prepare data for update
@@ -308,5 +345,13 @@ class MyEmployees
         wp_send_json_success([
             'message' => 'Employee data updated successfully'
         ]);
+    }
+
+    // Helper function to fetch existing employee data
+    private function fetchExistingEmployeeData($employee_id) {
+        return $this->wpdb->get_row(
+            $this->wpdb->prepare("SELECT profile_image FROM {$this->table_name} WHERE id = %d", $employee_id),
+            ARRAY_A
+        );
     }
 }
